@@ -146,7 +146,7 @@ facetcities=facetcities[facetcities$Variable!=&quot;City&quot;,]
 
 facetcities$Values=as.numeric(facetcities$Values)
 
-ggplot(facetcities,aes(x=Rank,y=Values)) + geom_point(size=.5)+ facet_wrap(~Variable, scales = &quot;free&quot;)+geom_smooth(method=&quot;lm&quot;)</code></pre>
+ggplot(facetcities,aes(x=Rank,y=Values)) + geom_point(size=.5)+ facet_wrap(~Variable, scales = &quot;free&quot;)+geom_smooth(method=&quot;lm&quot;) + labs(list(title = &quot;Variables and their Influence on the City Ranking&quot;, x = &quot;Rank&quot;, y = &quot;Variable&quot;))</code></pre>
 <p><img src="bcities_files/figure-html/fig1-1.png" width="1152" /></p>
 <p>This facet graph gives us a an overview at the relationships between the ranking of the cities and the variables: Population, Bars, Restaurants, Museums, Libraries, Number of Pro Sports Teams, Park Acres to 1000 residents, Colleges, Percentage of people with a Graduate Degree, Median Household Incomes and Percent Unemployed. From this, we wanted to examine some of the relationships further. Then, we ran correlation tests with the variables that we saw the highest relationship with, and the variables we were unsure about.</p>
 <div id="comparing-rank-with-percentage-of-people-with-graduate-degrees" class="section level5">
