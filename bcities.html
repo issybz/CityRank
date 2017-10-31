@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Issy Belzil" />
+
+<meta name="date" content="2017-10-24" />
+
+<title>Bcities</title>
+
+<script src="bcities_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="bcities_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="bcities_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="bcities_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="bcities_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="bcities_files/navigation-1.1/tabsets.js"></script>
+<link href="bcities_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="bcities_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Bcities</h1>
+<h4 class="author"><em>Issy Belzil</em></h4>
+<h4 class="date"><em>2017-10-24</em></h4>
+
+</div>
+
+
+<pre class="r"><code>#setwd(&quot;~/Documents/2DataViz /BCity&quot;)
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(gudatavizfa17) #Load everytime
+
+#install.packages(&#39;googleVis&#39;)
+#install.packages(&quot;ggmap&quot;)
+library(ggmap)
+library(maps)
+library(googleVis)</code></pre>
+<div id="question-1-please-look-at-relationships-between-different-variables-and-identify-variables-that-appear-to-be-strongly-related-to-having-a-higher-rank-in-the-survey." class="section level3">
+<h3>Question 1: Please look at relationships between different variables and identify variables that appear to be strongly related to having a higher rank in the survey.</h3>
+<p>Facet Graphs: First, we looked at all the variables and compared them against the rankings to try to find relationships.</p>
+<pre class="r"><code>facetcities=gather(bcities, &quot;Variable&quot;, &quot;Values&quot;, 1,3:13)
+
+facetcities=facetcities[facetcities$Variable!=&quot;City&quot;,]
+
+
+facetcities$Values=as.numeric(facetcities$Values)
+
+ggplot(facetcities,aes(x=Rank,y=Values)) + geom_point(size=.5)+ facet_wrap(~Variable, scales = &quot;free&quot;)+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>This facet graph gives us a an overview at the relationships between the ranking of the cities and the variables: Population, Bars, Restaurants, Museums, Libraries, Number of Pro Sports Teams, Park Acres to 1000 residents, Colleges, Percentage of people with a Graduate Degree, Median Household Incomes and Percent Unemployed. From this, we wanted to examine some of the relationships further. Then, we ran correlation tests with the variables that we saw the highest relationship with, and the variables we were unsure about.</p>
+<div id="comparing-rank-with-percentage-of-people-with-graduate-degrees" class="section level5">
+<h5>Comparing Rank with Percentage of People with Graduate Degrees</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Percent.with.Graduate.Degree)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>#converting Rank to numeric value
+
+bcities$Rank &lt;- as.numeric(bcities$Rank)
+str(bcities)</code></pre>
+<p>‘data.frame’: 50 obs. of 15 variables: $ City : Factor w/ 50 levels “Anchorage”,“Arlington”,..: 22 1 31 45 11 8 33 43 37 14 … $ Rank : num 50 49 48 47 46 45 44 43 42 41 … $ Population : int 3811518 297018 416855 304219 396441 223454 1418687 214770 225561 1199739 … $ Bars : int 393 63 206 143 204 10 179 64 83 249 … $ Restaurants : int 8305 682 908 795 866 451 2384 680 596 2808 … $ Museums : int 106 12 12 32 23 1 22 5 10 26 … $ Libraries : int 108 14 15 23 51 8 44 7 14 43 … $ Pro.Sports.Teams : int 5 0 1 3 3 0 5 1 1 2 … $ Park.acres.per.1000.residents: int 6 1753 21 10 7 252 28 72 11 23 … $ Colleges : int 30 2 7 6 8 11 11 2 3 10 … $ Percent.with.Graduate.Degree : num 6.7 7.5 7.1 7.8 4.5 6.8 6.2 10.8 7.1 5.9 … $ Median.household.income : int 56558 85554 64026 44360 35685 80695 60366 99130 64507 44838 … $ Percent.unemployed : num 11.1 6.4 4.6 9.8 7.9 6.3 7.3 7.3 11.7 7.9 … $ lon : num -118.2 -149.9 -96 -90.2 -81.7 … $ lat : num 34.1 61.2 41.3 38.6 41.5 …</p>
+<pre class="r"><code>#do the correlation command 
+
+cor(bcities$Rank, y = bcities$Percent.with.Graduate.Degree, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.5321019</p>
+<p>After running a pearson correlation test, the result of -0.53 proves that there is a moderate negative relationship between Rank and Percent with Graduate Degree.</p>
+</div>
+<div id="comparing-rank-with-percentage-of-people-who-are-unemployed" class="section level5">
+<h5>Comparing Rank with Percentage of People who are Unemployed</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Percent.unemployed)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Percent.unemployed, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] 0.02936767</p>
+<p>To prove there is not a relationship between unemployment and the ranking of the cities, we ran another correlation test between the two variables. The r coefficient = 0.0293, proving no relationship.</p>
+</div>
+<div id="comparing-rank-with-number-of-colleges" class="section level5">
+<h5>Comparing Rank with Number of Colleges</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Colleges)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>#converting Colleges to numeric value
+
+bcities$Colleges &lt;- as.numeric(bcities$Colleges)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Colleges, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.272833</p>
+<p>Rank and Colleges correlation of = -0.272. Thus, there is a weak downhill correlation between cities ranks and how many colleges they have.</p>
+</div>
+<div id="comparing-rank-with-number-of-pro-sports-team" class="section level5">
+<h5>Comparing Rank with Number of Pro Sports Team</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Pro.Sports.Teams)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>#converting Pro.Sports.Teams to numeric value
+
+bcities$Colleges &lt;- as.numeric(bcities$Pro.Sports.Teams)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Pro.Sports.Teams, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.2253149</p>
+<p>Rank and Colleges correlation of = -0.222. Thus, there is a weak downhill correlation between how rank and how many pro sports teams.</p>
+</div>
+<div id="comparing-rank-with-number-of-museums" class="section level5">
+<h5>Comparing Rank with Number of Museums</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Museums)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>#converting Museums to numeric value
+
+bcities$Museums &lt;- as.numeric(bcities$Museums)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Museums, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.2884036</p>
+<p>Observing the correlation between Ranking of the City and the amount of museums in a city, it is a larger correlation than Colleges and Ranking. Although the correlation is still weak at r = -0.288.</p>
+</div>
+<div id="comparing-rank-with-number-of-libraries" class="section level5">
+<h5>Comparing Rank with Number of Libraries</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Libraries)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>#converting Libraries to numeric value
+
+bcities$Libraries &lt;- as.numeric(bcities$Libraries)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Libraries, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.2465609</p>
+<p>Weak correlation at r = -0.247</p>
+</div>
+<div id="comparing-rank-with-number-of-bars" class="section level5">
+<h5>Comparing Rank with Number of Bars</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Bars)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>#converting Bars to numeric value
+
+bcities$Bars &lt;- as.numeric(bcities$Bars)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Bars, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.2182305</p>
+<p>Low correlation. Weak downhill correlation.</p>
+</div>
+<div id="comparing-rank-with-population" class="section level5">
+<h5>Comparing Rank with Population</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Population)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>#converting Population to numeric value
+
+bcities$Population &lt;- as.numeric(bcities$Population)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Population, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.09293783</p>
+<p>One of the lowest correlations, found thus far between Ranking of City and a factor that may have thought to be influenced by the ranking. The pearson correlation variable = -0.0929. This is surprising as the top 10 have higher than average populations, but overall, there is no correlation. Having a higher population will not effect your ranking.</p>
+</div>
+<div id="comparing-rank-with-number-of-restaurants" class="section level5">
+<h5>Comparing Rank with Number of Restaurants</h5>
+<pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Restaurants)) + geom_point(shape=1)  +
+geom_smooth(method=&quot;lm&quot;)</code></pre>
+<p><img src="bcities_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>#converting Restaurants to numeric value
+
+bcities$Restaurants &lt;- as.numeric(bcities$Restaurants)
+
+#Performing Correlation Command
+
+cor(bcities$Rank, y = bcities$Restaurants, use = &quot;everything&quot;,
+    method = c(&quot;pearson&quot;))</code></pre>
+<p>[1] -0.1666569</p>
+<p>There is weak to no relationship between having a large number of restaurants and having a good ranking, with the pearson correlation at -0.167.</p>
+</div>
+<div id="the-factor-with-the-highest-correlation-to-rank-is-people-with-graduate-degrees-and-has-the-strongest-relationship." class="section level5">
+<h5>The factor with the highest correlation to Rank is people with Graduate Degrees and has the strongest relationship.</h5>
+</div>
+</div>
+<div id="question-2-plot-the-cities-on-a-map-of-the-us." class="section level3">
+<h3>Question 2: Plot the cities on a map of the US.</h3>
+<pre class="r"><code>require(maps)
+require(ggmap)</code></pre>
+<p>Creating columns to better display data(cityrank) and latlong variable to combine coordinates for plotting on gvisgeochart:</p>
+<pre class="r"><code>bcities$latlong=paste(bcities$lat,bcities$lon, sep=&quot;:&quot;)
+bcities$cityrank=paste(bcities$City,bcities$Rank,sep=&quot;: Rank &quot;)</code></pre>
+<p>Plot bcities data using gvisGeoChart:</p>
+<pre class="r"><code>CityLoc=gvisGeoChart(bcities,&quot;latlong&quot;,hovervar = &quot;cityrank&quot;,options=list(displayMode=&quot;Markers&quot;,region=&quot;US&quot;))
+plot(CityLoc)</code></pre>
+<!-- GeoChart generated in R 3.4.1 by googleVis 0.6.2 package -->
+<!-- Tue Oct 31 12:47:18 2017 -->
+<!-- jsHeader -->
+<script type="text/javascript">
+ 
+// jsData 
+function gvisDataGeoChartIDbf9f6149f14c () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+34.0522342,
+-118.2436849,
+"Los Angeles: Rank 50"
+],
+[
+61.2180556,
+-149.9002778,
+"Anchorage: Rank 49"
+],
+[
+41.2523634,
+-95.9979883,
+"Omaha: Rank 48"
+],
+[
+38.6270025,
+-90.1994042,
+"St. Louis: Rank 47"
+],
+[
+41.49932,
+-81.6943605,
+"Cleveland: Rank 46"
+],
+[
+36.7682088,
+-76.2874927,
+"Chesapeake: Rank 45"
+],
+[
+33.4483771,
+-112.0740373,
+"Phoenix: Rank 44"
+],
+[
+33.4941704,
+-111.9260519,
+"Scottsdale: Rank 43"
+],
+[
+39.5296329,
+-119.8138027,
+"Reno: Rank 42"
+],
+[
+32.7801399,
+-96.8004511,
+"Dallas : Rank 41"
+],
+[
+36.8529263,
+-75.977985,
+"Virginia Beach: Rank 40"
+],
+[
+35.2270869,
+-80.8431267,
+"Charlotte: Rank 39"
+],
+[
+36.1539816,
+-95.992775,
+"Tulsa: Rank 38"
+],
+[
+39.768403,
+-86.158068,
+"Indianapolis: Rank 37"
+],
+[
+38.8338816,
+-104.8213634,
+"Colorado Springs: Rank 36"
+],
+[
+27.950575,
+-82.4571776,
+"Tampa : Rank 35"
+],
+[
+40.809722,
+-96.675278,
+"Lincoln: Rank 35"
+],
+[
+37.3393857,
+-121.8949555,
+"San Jose: Rank 33"
+],
+[
+43.16103,
+-77.6109219,
+"Rochester: Rank 32"
+],
+[
+37.8043637,
+-122.2711137,
+"Oakland: Rank 31"
+],
+[
+29.4241219,
+-98.4936282,
+"San Antonio: Rank 30"
+],
+[
+39.2903848,
+-76.6121893,
+"Baltimore: Rank 29"
+],
+[
+41.8781136,
+-87.6297982,
+"Chicago: Rank 28"
+],
+[
+32.735687,
+-97.1080656,
+"Arlington: Rank 27"
+],
+[
+43.0389025,
+-87.9064736,
+"Milwaukee: Rank 26"
+],
+[
+38.0405837,
+-84.5037164,
+"Lexington: Rank 25"
+],
+[
+39.952335,
+-75.163789,
+"Philadelphia: Rank 24"
+],
+[
+35.4675602,
+-97.5164276,
+"Oklahoma City: Rank 23"
+],
+[
+29.7601927,
+-95.3693896,
+"Houston: Rank 22"
+],
+[
+39.1031182,
+-84.5120196,
+"Cincinatti: Rank 21"
+],
+[
+39.9611755,
+-82.9987942,
+"Columbus : Rank 20"
+],
+[
+21.3069444,
+-157.8583333,
+"Honolulu: Rank 19"
+],
+[
+35.7795897,
+-78.6381787,
+"Raleigh: Rank 18"
+],
+[
+43.0730517,
+-89.4012302,
+"Madison: Rank 17"
+],
+[
+33.7489954,
+-84.3879824,
+"Atlanta: Rank 16"
+],
+[
+39.0997265,
+-94.5785667,
+"Kansas City: Rank 15"
+],
+[
+29.9510658,
+-90.0715323,
+"New Orleans: Rank 14"
+],
+[
+36.166667,
+-86.783333,
+"Nashvile: Rank 13"
+],
+[
+44.983334,
+-93.26667,
+"Minneapolis: Rank 12"
+],
+[
+40.4406248,
+-79.9958864,
+"Pittsburgh: Rank 11"
+],
+[
+44.9537029,
+-93.0899578,
+"St. Paul: Rank 10"
+],
+[
+32.715738,
+-117.1610838,
+"San Diego : Rank 9"
+],
+[
+30.267153,
+-97.7430608,
+"Austin: Rank 8"
+],
+[
+40.7127837,
+-74.0059413,
+"New York: Rank 7"
+],
+[
+39.737567,
+-104.9847179,
+"Denver: Rank 6"
+],
+[
+45.5234515,
+-122.6762071,
+"Portland: Rank 5"
+],
+[
+42.3584308,
+-71.0597732,
+"Boston: Rank 4"
+],
+[
+38.9071923,
+-77.0368707,
+"Washington: Rank 3"
+],
+[
+47.6062095,
+-122.3320708,
+"Seattle: Rank 2"
+],
+[
+37.7749295,
+-122.4194155,
+"San Francisco: Rank 1"
+] 
+];
+data.addColumn('number','Latitude');
+data.addColumn('number','Longitude');
+data.addColumn('string','cityrank');
+data.addRows(datajson);
+return(data);
+}
+ 
+// jsDrawChart
+function drawChartGeoChartIDbf9f6149f14c() {
+var data = gvisDataGeoChartIDbf9f6149f14c();
+var options = {};
+options["width"] = 556;
+options["height"] = 347;
+options["displayMode"] = "Markers";
+options["region"] = "US";
+
+    var chart = new google.visualization.GeoChart(
+    document.getElementById('GeoChartIDbf9f6149f14c')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+ 
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "geochart";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartGeoChartIDbf9f6149f14c);
+})();
+function displayChartGeoChartIDbf9f6149f14c() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+ 
+// jsFooter
+</script>
+<!-- jsChart -->
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartIDbf9f6149f14c"></script>
+<!-- divChart -->
+<div id="GeoChartIDbf9f6149f14c" style="width: 556; height: 347;">
+
+</div>
+<iframe width="800" height="360" src="geochartstate.html" frameborder="0" allowfullscreen>
+</iframe>
+</div>
+<div id="question-3-identify-the-states-in-which-these-cities-lie-and-then-develop-a-choropleth-that-colors-different-states-based-on-the-number-of-cities-that-are-present-in-each-state." class="section level3">
+<h3>Question 3: Identify the States in which these cities lie and then develop a choropleth that colors different states based on the number of cities that are present in each State.</h3>
+<p>Manually input State names:</p>
+<pre class="r"><code>bcities$States = c(&quot;California&quot;, &quot;Alaska&quot;, &quot;Nebraska&quot;, &quot;Missouri&quot;, &quot;Ohio&quot;, &quot;Virginia&quot;, &quot;Arizona&quot;, &quot;Arizona&quot;, &quot;Nevada&quot;, &quot;Texas&quot;, &quot;Virginia&quot;, &quot;North Carolina&quot;, &quot;Oklahoma&quot;, &quot;Indiana&quot;, &quot;Colorado&quot;, &quot;Florida&quot;, &quot;Nebraska&quot;, &quot;California&quot;, &quot;New York&quot;, &quot;California&quot;, &quot;Texas&quot;, &quot;Maryland&quot;, &quot;Illinois&quot;, &quot;Washington&quot;, &quot;Wisconsin&quot;, &quot;Kentucky&quot;, &quot;Pennsylvania&quot;, &quot;Oklahoma&quot;, &quot;Texas&quot;, &quot;Ohio&quot;, &quot;Ohio&quot;, &quot;Hawaii&quot;, &quot;North Carolina&quot;, &quot;Wisconsin&quot;, &quot;Georgia&quot;, &quot;Kansas&quot;, &quot;Lousiana&quot;, &quot;Tennessee&quot;, &quot;Minnesota&quot;, &quot;Pennsylvania&quot;, &quot;Minnesota&quot;, &quot;California&quot;, &quot;Texas&quot;, &quot;New York&quot;, &quot;Colorado&quot;, &quot;Oregon&quot;, &quot;Massachusetts&quot;, &quot;District of Columbia&quot;, &quot;Washington&quot;, &quot;California&quot;)</code></pre>
+<p>Create Data set of States and count cities within each state. Convert char variable to factor variable, and int to number variable.</p>
+<pre class="r"><code>bstatescount = bcities %&gt;% group_by(States) %&gt;% summarise(Count = n())
+bstatescount$Ccount &lt;- as.numeric(bstatescount$Count)
+bstatescount$States &lt;- as.factor(bstatescount$States)
+str(bstatescount)</code></pre>
+<p>Classes ‘tbl_df’, ‘tbl’ and ‘data.frame’: 30 obs. of 3 variables: $ States: Factor w/ 30 levels “Alaska”,“Arizona”,..: 1 2 3 4 5 6 7 8 9 10 … $ Count : int 1 2 5 2 1 1 1 1 1 1 … $ Ccount: num 1 2 5 2 1 1 1 1 1 1 …</p>
+<p>Plot dataset using GvizGeoChart</p>
+<pre class="r"><code>CityCount = gvisGeoChart(bstatescount,
+                         locationvar = &quot;States&quot;, 
+                         colorvar = &quot;Count&quot;, 
+                         options=list(region=&quot;US&quot;, displayMode=&quot;regions&quot;,
+                                      resolution=&quot;provinces&quot;, width=800,
+                                      height=600))
+
+plot(CityCount)</code></pre>
+<!-- GeoChart generated in R 3.4.1 by googleVis 0.6.2 package -->
+<!-- Tue Oct 31 12:47:18 2017 -->
+<!-- jsHeader -->
+<script type="text/javascript">
+ 
+// jsData 
+function gvisDataGeoChartIDbf9f6ccc439c () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+"Alaska",
+1
+],
+[
+"Arizona",
+2
+],
+[
+"California",
+5
+],
+[
+"Colorado",
+2
+],
+[
+"District of Columbia",
+1
+],
+[
+"Florida",
+1
+],
+[
+"Georgia",
+1
+],
+[
+"Hawaii",
+1
+],
+[
+"Illinois",
+1
+],
+[
+"Indiana",
+1
+],
+[
+"Kansas",
+1
+],
+[
+"Kentucky",
+1
+],
+[
+"Lousiana",
+1
+],
+[
+"Maryland",
+1
+],
+[
+"Massachusetts",
+1
+],
+[
+"Minnesota",
+2
+],
+[
+"Missouri",
+1
+],
+[
+"Nebraska",
+2
+],
+[
+"Nevada",
+1
+],
+[
+"New York",
+2
+],
+[
+"North Carolina",
+2
+],
+[
+"Ohio",
+3
+],
+[
+"Oklahoma",
+2
+],
+[
+"Oregon",
+1
+],
+[
+"Pennsylvania",
+2
+],
+[
+"Tennessee",
+1
+],
+[
+"Texas",
+4
+],
+[
+"Virginia",
+2
+],
+[
+"Washington",
+2
+],
+[
+"Wisconsin",
+2
+] 
+];
+data.addColumn('string','States');
+data.addColumn('number','Count');
+data.addRows(datajson);
+return(data);
+}
+ 
+// jsDrawChart
+function drawChartGeoChartIDbf9f6ccc439c() {
+var data = gvisDataGeoChartIDbf9f6ccc439c();
+var options = {};
+options["width"] = 800;
+options["height"] = 600;
+options["region"] = "US";
+options["displayMode"] = "regions";
+options["resolution"] = "provinces";
+
+    var chart = new google.visualization.GeoChart(
+    document.getElementById('GeoChartIDbf9f6ccc439c')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+ 
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "geochart";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartGeoChartIDbf9f6ccc439c);
+})();
+function displayChartGeoChartIDbf9f6ccc439c() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+ 
+// jsFooter
+</script>
+<!-- jsChart -->
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartIDbf9f6ccc439c"></script>
+<!-- divChart -->
+<div id="GeoChartIDbf9f6ccc439c" style="width: 800; height: 600;">
+
+</div>
+</div>
+<div id="section" class="section level1">
+<h1><iframe width = "800" height="360" src="GeoCity.html" frameborder="0" allowfullscreen></iframe></h1>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
