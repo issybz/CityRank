@@ -1,6 +1,6 @@
 ---
 title: "Bcities"
-author: "Issy Belzil"
+author: "Issy Belzil & Mikaela Murgoitio"
 date: '2017-10-24'
 output: 
   html_document:
@@ -52,7 +52,7 @@ op <- options(gvis.plot.tag='chart')
 Facet Graphs: First, we looked at all the variables and compared them against the rankings to try to find relationships.
 
 
-```{r}
+```{r fig1, fig.height = 6, fig.width = 12}
 facetcities=gather(bcities, "Variable", "Values", 1,3:13)
 
 facetcities=facetcities[facetcities$Variable!="City",]
@@ -60,7 +60,7 @@ facetcities=facetcities[facetcities$Variable!="City",]
 
 facetcities$Values=as.numeric(facetcities$Values)
 
-ggplot(facetcities,aes(x=Rank,y=Values)) + geom_point(size=.5)+ facet_wrap(~Variable, scales = "free")+geom_smooth(method="lm")
+ggplot(facetcities,aes(x=Rank,y=Values)) + geom_point(size=.5)+ facet_wrap(~Variable, scales = "free")+geom_smooth(method="lm") + labs(list(title = "Variables and their Influence on the City Ranking", x = "Rank", y = "Variable"))
 ```
 
 This facet graph gives us a an overview at the relationships between the ranking of the cities and the variables:  Population, Bars, Restaurants, Museums, Libraries, Number of Pro Sports Teams, Park Acres to 1000 residents, Colleges, Percentage of people with a Graduate Degree, Median Household Incomes and Percent Unemployed. From this, we wanted to examine some of the relationships further. Then, we ran correlation tests with the variables that we saw the highest relationship with, and the variables we were unsure about. 

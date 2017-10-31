@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Issy Belzil" />
+<meta name="author" content="Issy Belzil &amp; Mikaela Murgoitio" />
 
 <meta name="date" content="2017-10-24" />
 
@@ -118,7 +118,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Bcities</h1>
-<h4 class="author"><em>Issy Belzil</em></h4>
+<h4 class="author"><em>Issy Belzil &amp; Mikaela Murgoitio</em></h4>
 <h4 class="date"><em>2017-10-24</em></h4>
 
 </div>
@@ -147,13 +147,13 @@ facetcities=facetcities[facetcities$Variable!=&quot;City&quot;,]
 facetcities$Values=as.numeric(facetcities$Values)
 
 ggplot(facetcities,aes(x=Rank,y=Values)) + geom_point(size=.5)+ facet_wrap(~Variable, scales = &quot;free&quot;)+geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/fig1-1.png" width="1152" /></p>
 <p>This facet graph gives us a an overview at the relationships between the ranking of the cities and the variables: Population, Bars, Restaurants, Museums, Libraries, Number of Pro Sports Teams, Park Acres to 1000 residents, Colleges, Percentage of people with a Graduate Degree, Median Household Incomes and Percent Unemployed. From this, we wanted to examine some of the relationships further. Then, we ran correlation tests with the variables that we saw the highest relationship with, and the variables we were unsure about.</p>
 <div id="comparing-rank-with-percentage-of-people-with-graduate-degrees" class="section level5">
 <h5>Comparing Rank with Percentage of People with Graduate Degrees</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Percent.with.Graduate.Degree)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>#converting Rank to numeric value
 
 bcities$Rank &lt;- as.numeric(bcities$Rank)
@@ -170,7 +170,7 @@ cor(bcities$Rank, y = bcities$Percent.with.Graduate.Degree, use = &quot;everythi
 <h5>Comparing Rank with Percentage of People who are Unemployed</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Percent.unemployed)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <pre class="r"><code>#Performing Correlation Command
 
 cor(bcities$Rank, y = bcities$Percent.unemployed, use = &quot;everything&quot;,
@@ -182,7 +182,7 @@ cor(bcities$Rank, y = bcities$Percent.unemployed, use = &quot;everything&quot;,
 <h5>Comparing Rank with Number of Colleges</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Colleges)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>#converting Colleges to numeric value
 
 bcities$Colleges &lt;- as.numeric(bcities$Colleges)
@@ -198,7 +198,7 @@ cor(bcities$Rank, y = bcities$Colleges, use = &quot;everything&quot;,
 <h5>Comparing Rank with Number of Pro Sports Team</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Pro.Sports.Teams)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>#converting Pro.Sports.Teams to numeric value
 
 bcities$Colleges &lt;- as.numeric(bcities$Pro.Sports.Teams)
@@ -214,7 +214,7 @@ cor(bcities$Rank, y = bcities$Pro.Sports.Teams, use = &quot;everything&quot;,
 <h5>Comparing Rank with Number of Museums</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Museums)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <pre class="r"><code>#converting Museums to numeric value
 
 bcities$Museums &lt;- as.numeric(bcities$Museums)
@@ -230,7 +230,7 @@ cor(bcities$Rank, y = bcities$Museums, use = &quot;everything&quot;,
 <h5>Comparing Rank with Number of Libraries</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Libraries)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>#converting Libraries to numeric value
 
 bcities$Libraries &lt;- as.numeric(bcities$Libraries)
@@ -246,7 +246,7 @@ cor(bcities$Rank, y = bcities$Libraries, use = &quot;everything&quot;,
 <h5>Comparing Rank with Number of Bars</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Bars)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>#converting Bars to numeric value
 
 bcities$Bars &lt;- as.numeric(bcities$Bars)
@@ -262,7 +262,7 @@ cor(bcities$Rank, y = bcities$Bars, use = &quot;everything&quot;,
 <h5>Comparing Rank with Population</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Population)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>#converting Population to numeric value
 
 bcities$Population &lt;- as.numeric(bcities$Population)
@@ -278,7 +278,7 @@ cor(bcities$Rank, y = bcities$Population, use = &quot;everything&quot;,
 <h5>Comparing Rank with Number of Restaurants</h5>
 <pre class="r"><code>ggplot(bcities,aes(x=Rank,y=Restaurants)) + geom_point(shape=1)  +
 geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="bcities_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="bcities_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>#converting Restaurants to numeric value
 
 bcities$Restaurants &lt;- as.numeric(bcities$Restaurants)
@@ -305,12 +305,12 @@ bcities$cityrank=paste(bcities$City,bcities$Rank,sep=&quot;: Rank &quot;)</code>
 <pre class="r"><code>CityLoc=gvisGeoChart(bcities,&quot;latlong&quot;,hovervar = &quot;cityrank&quot;,options=list(displayMode=&quot;Markers&quot;,region=&quot;US&quot;))
 plot(CityLoc)</code></pre>
 <!-- GeoChart generated in R 3.4.1 by googleVis 0.6.2 package -->
-<!-- Tue Oct 31 14:06:03 2017 -->
+<!-- Tue Oct 31 14:10:14 2017 -->
 <!-- jsHeader -->
 <script type="text/javascript">
  
 // jsData 
-function gvisDataGeoChartIDc88f1337b225 () {
+function gvisDataGeoChartIDc9711f9846e4 () {
 var data = new google.visualization.DataTable();
 var datajson =
 [
@@ -573,8 +573,8 @@ return(data);
 }
  
 // jsDrawChart
-function drawChartGeoChartIDc88f1337b225() {
-var data = gvisDataGeoChartIDc88f1337b225();
+function drawChartGeoChartIDc9711f9846e4() {
+var data = gvisDataGeoChartIDc9711f9846e4();
 var options = {};
 options["width"] = 556;
 options["height"] = 347;
@@ -582,7 +582,7 @@ options["displayMode"] = "Markers";
 options["region"] = "US";
 
     var chart = new google.visualization.GeoChart(
-    document.getElementById('GeoChartIDc88f1337b225')
+    document.getElementById('GeoChartIDc9711f9846e4')
     );
     chart.draw(data,options);
     
@@ -606,9 +606,9 @@ if (newPackage)
   pkgs.push(chartid);
   
 // Add the drawChart function to the global list of callbacks
-callbacks.push(drawChartGeoChartIDc88f1337b225);
+callbacks.push(drawChartGeoChartIDc9711f9846e4);
 })();
-function displayChartGeoChartIDc88f1337b225() {
+function displayChartGeoChartIDc9711f9846e4() {
   var pkgs = window.__gvisPackages = window.__gvisPackages || [];
   var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
   window.clearTimeout(window.__gvisLoad);
@@ -631,9 +631,9 @@ callbacks.shift()();
 // jsFooter
 </script>
 <!-- jsChart -->
-<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartIDc88f1337b225"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartIDc9711f9846e4"></script>
 <!-- divChart -->
-<div id="GeoChartIDc88f1337b225" style="width: 556; height: 347;">
+<div id="GeoChartIDc9711f9846e4" style="width: 556; height: 347;">
 
 </div>
 <iframe width="800" height="360" src="geochartstate.html" frameborder="0" allowfullscreen>
@@ -659,12 +659,12 @@ str(bstatescount)</code></pre>
 
 plot(CityCount)</code></pre>
 <!-- GeoChart generated in R 3.4.1 by googleVis 0.6.2 package -->
-<!-- Tue Oct 31 14:06:04 2017 -->
+<!-- Tue Oct 31 14:10:14 2017 -->
 <!-- jsHeader -->
 <script type="text/javascript">
  
 // jsData 
-function gvisDataGeoChartIDc88f22766160 () {
+function gvisDataGeoChartIDc971280001dc () {
 var data = new google.visualization.DataTable();
 var datajson =
 [
@@ -796,8 +796,8 @@ return(data);
 }
  
 // jsDrawChart
-function drawChartGeoChartIDc88f22766160() {
-var data = gvisDataGeoChartIDc88f22766160();
+function drawChartGeoChartIDc971280001dc() {
+var data = gvisDataGeoChartIDc971280001dc();
 var options = {};
 options["width"] = 800;
 options["height"] = 600;
@@ -806,7 +806,7 @@ options["displayMode"] = "regions";
 options["resolution"] = "provinces";
 
     var chart = new google.visualization.GeoChart(
-    document.getElementById('GeoChartIDc88f22766160')
+    document.getElementById('GeoChartIDc971280001dc')
     );
     chart.draw(data,options);
     
@@ -830,9 +830,9 @@ if (newPackage)
   pkgs.push(chartid);
   
 // Add the drawChart function to the global list of callbacks
-callbacks.push(drawChartGeoChartIDc88f22766160);
+callbacks.push(drawChartGeoChartIDc971280001dc);
 })();
-function displayChartGeoChartIDc88f22766160() {
+function displayChartGeoChartIDc971280001dc() {
   var pkgs = window.__gvisPackages = window.__gvisPackages || [];
   var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
   window.clearTimeout(window.__gvisLoad);
@@ -855,9 +855,9 @@ callbacks.shift()();
 // jsFooter
 </script>
 <!-- jsChart -->
-<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartIDc88f22766160"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartIDc971280001dc"></script>
 <!-- divChart -->
-<div id="GeoChartIDc88f22766160" style="width: 800; height: 600;">
+<div id="GeoChartIDc971280001dc" style="width: 800; height: 600;">
 
 </div>
 </div>
