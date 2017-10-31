@@ -255,9 +255,6 @@ CityLoc=gvisGeoChart(bcities,"latlong",hovervar = "cityrank",options=list(displa
 plot(CityLoc)
 ```
 
-<iframe width = "800" height="360" src="geochartstate.html" frameborder="0" allowfullscreen> </iframe>
-
-
 
 ###Question 3: Identify the States in which these cities lie and then develop a choropleth that colors different states based on the number of cities that are present in each State.
 
@@ -288,7 +285,5 @@ CityCount = gvisGeoChart(bstatescount,
 plot(CityCount)
 
 ```
-
-#<iframe width = "800" height="360" src="GeoCity.html" frameborder="0" allowfullscreen></iframe>
 
 
